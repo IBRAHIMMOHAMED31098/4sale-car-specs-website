@@ -31,23 +31,16 @@ export const useCarApi = () => {
           model,
           year,
           specs: {
-            engine: "2.5L 4-Cylinder",
-            horsepower: "203 HP",
-            torque: "184 lb-ft",
-            transmission: "8-Speed Automatic",
-            drivetrain: "Front-Wheel Drive",
-            fuelEconomy: "28 city / 39 highway mpg",
-            fuelCapacity: "14.5 gallons",
-            seatingCapacity: "5 passengers",
-            cargoSpace: "15.1 cubic feet",
-            safetyRating: "5-Star Overall",
-            warranty: "3 years/36,000 miles"
+            "full_name": `${maker.toLowerCase()} ${model.toLowerCase()}_${year}`,
+            "car_model_id": "1867.0",
+            "Engine Capacity (liters)": 3,
+            "Cylinders": "6",
+            "Drive Type": "All Wheel Drive",
+            "Fuel Tank Capacity (liters)": "60.0"
           },
           images: [
-            `https://via.placeholder.com/400x300/1e40af/ffffff?text=${encodeURIComponent(maker + ' ' + model + ' Exterior')}`,
-            `https://via.placeholder.com/400x300/059669/ffffff?text=${encodeURIComponent(maker + ' ' + model + ' Interior')}`,
-            `https://via.placeholder.com/400x300/dc2626/ffffff?text=${encodeURIComponent(maker + ' ' + model + ' Dashboard')}`,
-            `https://via.placeholder.com/400x300/7c3aed/ffffff?text=${encodeURIComponent(maker + ' ' + model + ' Profile')}`
+            "https://via.placeholder.com/400x300/1e40af/ffffff?text=Exterior",
+            "https://via.placeholder.com/400x300/059669/ffffff?text=Interior"
           ]
         };
         
@@ -59,13 +52,12 @@ export const useCarApi = () => {
         return;
       }
 
-      // Make actual API call
-      const response = await fetch(apiEndpoint, {
-        method: 'POST',
+      // Make actual API call using GET request
+      const response = await fetch(`${apiEndpoint}/specs/${encodeURIComponent(maker)}/${encodeURIComponent(model)}/${encodeURIComponent(year)}`, {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ maker, model, year }),
       });
 
       if (!response.ok) {
@@ -73,7 +65,20 @@ export const useCarApi = () => {
       }
 
       const data = await response.json();
-      setCarData(data);
+      
+      // Process the response to match our CarData interface
+      const processedData: CarData = {
+        maker,
+        model,
+        year,
+        specs: { ...data },
+        images: data.pictures ? data.pictures.split(',').map((url: string) => url.trim()) : []
+      };
+      
+      // Remove pictures from specs since we handle it separately
+      delete processedData.specs.pictures;
+      
+      setCarData(processedData);
       
       toast({
         title: "Success!",

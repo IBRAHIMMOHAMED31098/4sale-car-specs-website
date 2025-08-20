@@ -36,7 +36,7 @@ const Index = () => {
                   Back to Search
                 </Button>
               )}
-              <h1 className="text-2xl font-bold">Car Specs Finder</h1>
+              <h1 className="text-2xl font-bold">4Sale Car Specs</h1>
             </div>
             <Button
               variant="ghost"
@@ -57,11 +57,11 @@ const Index = () => {
                 type="url"
                 value={apiEndpoint}
                 onChange={(e) => setApiEndpoint(e.target.value)}
-                placeholder="http://localhost:3000/api/car-specs"
+                placeholder="http://localhost:8000"
                 className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-primary-foreground placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
               />
               <p className="text-xs text-primary-foreground/70 mt-1">
-                Your API should accept POST requests with maker, model, and year in the request body
+                Your FastAPI should accept GET requests at /specs/{"{maker}"}/{"{model}"}/{"{year}"}
               </p>
             </div>
           )}
@@ -74,7 +74,7 @@ const Index = () => {
           <div className="flex flex-col items-center justify-center space-y-8">
             <div className="text-center mb-8">
               <h2 className="text-4xl font-bold mb-4">
-                Discover Vehicle Specifications
+                4Sale Car Specifications
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl">
                 Get detailed information about any car including specs, features, and images. 
